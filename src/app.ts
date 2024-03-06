@@ -14,6 +14,9 @@ app.use(helmet());
 app.use(cors());
 app.use(express.json());
 
+//serve static files
+app.use("/static", express.static("public"));
+
 app.use("/api/v1", api);
 
 export default app;
