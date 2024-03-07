@@ -1,7 +1,7 @@
 import multer from "multer";
 import { v4 as uuidv4 } from "uuid";
 import createHttpError from "http-errors";
-import { Request, Express } from "express";
+import { Request } from "express";
 import { getImageExtension } from "../../utils";
 
 type DestinationCallback = (error: Error | null, destination: string) => void;
@@ -18,7 +18,11 @@ export const fileStorage = multer.diskStorage({
     //if there is need to upload images or files for other features
     callback(null, "public/upload/meal");
   },
-  filename(req: Request, file: Express.Multer.File, callback) {
+  filename(
+    req: Request,
+    file: Express.Multer.File,
+    callback: FilenameCallback
+  ) {
     if (
       process.env.NODE_ENVIRONMENT &&
       process.env.NODE_ENVIRONMENT === "development"
@@ -27,9 +31,9 @@ export const fileStorage = multer.diskStorage({
     }
     const imageExtension: string | boolean = getImageExtension(file.mimetype);
     if (!imageExtension) {
-      // @ts-ignore
       callback(
         createHttpError(422, "Invalid request (File type is not supported)"),
+        // @ts-ignore
         false
       );
       return;
@@ -58,8 +62,8 @@ export const customMulterConfig = multer({
   ) {
     const imageExtension: string | boolean = getImageExtension(file.mimetype);
     if (!imageExtension) {
-      // @ts-ignore
       callback(
+        // @ts-ignore
         createHttpError(422, "Invalid request (File type is not supported)"),
         false
       );
