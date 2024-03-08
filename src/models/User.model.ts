@@ -94,6 +94,4 @@ userSchema.methods.createJWT = function (): string {
   return jwt.sign(payload, environmentConfig.TOKEN_SECRET as string);
 };
 
-const User = model<IUserDocument>("User", userSchema);
-
-export default User;
+export const User = model<IUserDocument>("User", userSchema);
