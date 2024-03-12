@@ -1,10 +1,16 @@
-import express, { Express, Request, Response } from "express";
+import express, {
+  Express,
+  Request,
+  Response,
+  ErrorRequestHandler,
+} from "express";
 import colors from "colors";
 import { config } from "dotenv";
 import morgan from "morgan";
 import cors from "cors";
 import helmet from "helmet";
 import api from "./api";
+import { errorHandlerMiddleware } from "./middlewares/errors";
 config();
 
 const app: Express = express();
@@ -18,5 +24,8 @@ app.use(express.json());
 app.use("/static", express.static("public"));
 
 app.use("/api/v1", api);
+
+//error handler middleware
+app.use(errorHandlerMiddleware);
 
 export default app;

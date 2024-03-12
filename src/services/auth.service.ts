@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import createHttpError from "http-errors";
+import createHttpError, { InternalServerError } from "http-errors";
 import { User } from "../models";
 import { environmentConfig } from "../configs";
 
@@ -10,6 +10,10 @@ export const signUpService = async (
 ) => {
   // desructure data contained in the body of the request
   const { firstName, lastName, email, number, password } = req.body;
+  console.log(
+    "we are here in the signIn seervcie and an error should be called next..."
+  );
+  return next(InternalServerError);
   try {
     const existingUser = await User.findOne({
       email: new RegExp(`^${email}$`, "i"),
@@ -29,7 +33,9 @@ export const signUpService = async (
     //create token and send out token along with the user
     res.status(201).json(user);
   } catch (error) {
+    console.log("This is my error in my catch block.....");
     console.log(error);
+    next(InternalServerError);
   }
 };
 
@@ -56,6 +62,8 @@ export const loginService = async (
     //send back user
     res.status(200).json(user);
   } catch (error) {
+    console.log("error in our catch block.....");
     console.log(error);
+    next(InternalServerError);
   }
 };

@@ -3,6 +3,7 @@ import validator from "../validator";
 import { userSchema } from "./userSchema";
 
 export const signUpValidation: RequestHandler = (req, res, next) => {
+  //   console.log("we are in our signup validation middleware");
   validator(userSchema.registerUser, req.body, next);
 };
 

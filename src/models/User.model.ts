@@ -39,7 +39,6 @@ const userSchema: Schema<IUserDocument> = new Schema(
         "Please provide a valid email",
       ],
       maxLength: [128, "Email can't be greater than 128 characters"],
-      index: false,
     },
     number: {
       type: String,
