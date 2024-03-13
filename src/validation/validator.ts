@@ -3,6 +3,8 @@ import createHttpError, { InternalServerError } from "http-errors";
 import createError from "http-errors";
 import Joi from "joi";
 
+//modifying my body parameters to maybe indexed signatures might just be better here=> next line
+//this is because the use of the Object type is not explicit as it also allows for arrays, strings and more
 const validator = (
   schema: Joi.ObjectSchema,
   body: Object,
