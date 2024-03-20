@@ -1,6 +1,7 @@
 import { unlink, stat, PathLike, Stats } from "fs";
 
 export const deleteFile = (filePath: PathLike) => {
+  console.log("trying to delete a file");
   stat(filePath, (err: NodeJS.ErrnoException | null, stats: Stats) => {
     if (
       process.env.NODE_ENVIRONMENT &&

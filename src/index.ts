@@ -1,10 +1,11 @@
 import mongoose from "mongoose";
 import app from "./app";
 import { environmentConfig } from "./configs";
+import path from "path";
 
 const port = process.env.PORT || 4000;
 const environment = process.env.NODE_ENVIRONMENT;
-
+console.log(path.join(__dirname, "public"));
 export const startServer = async () => {
   const testConnectionString: string | undefined =
     environmentConfig.MONGO_DB_TEST_CONNECTION_STRING;

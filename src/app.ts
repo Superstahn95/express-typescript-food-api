@@ -11,6 +11,7 @@ import cors from "cors";
 import helmet from "helmet";
 import api from "./api";
 import { errorHandlerMiddleware } from "./middlewares/errors";
+
 config();
 
 const app: Express = express();

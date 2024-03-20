@@ -7,6 +7,9 @@ export const environmentConfig = {
   PORT: process.env.PORT || 4000,
   NODE_ENVIRONMENT: process.env.NODE_ENVIRONMENT,
   TOKEN_SECRET: process.env.TOKEN_SECRET,
+  CLOUD_NAME: process.env.CLOUD_NAME,
+  CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY,
+  CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET,
 };
 
 export default environmentConfig;

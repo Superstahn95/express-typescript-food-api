@@ -5,6 +5,11 @@ export const mealSchema = {
   createMeal: Joi.object({
     name: Joi.string().required(),
     description: Joi.string().required(),
-    mealImage: Joi.string().required(),
+    filename: Joi.string()
+      .required()
+      .label("Invalid request (Please upload Image)"),
+  }),
+  getMeal: Joi.object({
+    mealId: Joi.string().required(),
   }),
 };
