@@ -2,11 +2,12 @@ import { NextFunction, Request, Response } from "express";
 import mongoose from "mongoose";
 import path from "path";
 import createHttpError, { InternalServerError } from "http-errors";
-import { Meal } from "../models";
+import { Meal, Category } from "../models";
 import { deleteFile } from "../utils";
 import cloudinary from "../middlewares/file-uploads/cloudinary";
 import { customResponse } from "../utils";
 import { IMeal } from "../interfaces";
+import { getDefaultCategory } from "./category.service";
 
 export function consoleDirname() {
   console.log("This is my dirname...");
@@ -32,7 +33,7 @@ export const createMealService = async (
   next: NextFunction
 ) => {
   console.log(" we hit the meal service");
-  const { name, description, price } = req.body;
+  const { name, description, price, categoryId } = req.body;
   try {
     let cloudinaryResult;
     if (req.file?.filename) {
@@ -51,15 +52,37 @@ export const createMealService = async (
       });
       //delete from local directory
       deleteFile(localFilePath);
-      console.log("file deleted from local directory");
-      const mealData = new Meal({
-        name,
-        description,
-        price,
-        mealImage: cloudinaryResult?.secure_url,
-        cloudinary_id: cloudinaryResult?.public_id,
-      });
+      //need a function to get the default category
+      const category: string | null = categoryId
+        ? categoryId
+        : getDefaultCategory();
+      let mealData;
+      if (category) {
+        mealData = new Meal({
+          name,
+          description,
+          price,
+          mealImage: cloudinaryResult?.secure_url,
+          cloudinary_id: cloudinaryResult?.public_id,
+          category,
+        });
+      } else {
+        mealData = new Meal({
+          name,
+          description,
+          price,
+          mealImage: cloudinaryResult?.secure_url,
+          cloudinary_id: cloudinaryResult?.public_id,
+        });
+      }
+
       const meal = await mealData.save();
+      // get category meal belongs to and push the meal inside
+      if (meal.category) {
+        const mealCategory = await Category.findById(meal.category);
+        mealCategory?.meals.push(meal._id);
+        await mealCategory?.save();
+      }
       // try being more specific with the generic type being passed into the customResponse function
 
       res.status(201).json(

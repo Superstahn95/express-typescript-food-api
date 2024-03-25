@@ -27,6 +27,13 @@ const mealSchema = new Schema<IMeal>(
       type: String,
       required: true,
     },
+    category: {
+      //each meal should belong to a category
+      type: Schema.Types.ObjectId,
+      required: true,
+      ref: "Category",
+      default: null,
+    },
   },
   { timestamps: true }
 );

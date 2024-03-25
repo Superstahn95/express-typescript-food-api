@@ -5,3 +5,10 @@ import validator from "../validator";
 export const createCategoryValidation: RequestHandler = (req, res, next) => {
   validator(categorySchema.createCategory, req.body, next);
 };
+export const deleteCategoryValidation: RequestHandler = (req, res, next) => {
+  validator(
+    categorySchema.deleteCategory,
+    { ...req.body, ...req.params },
+    next
+  );
+};
