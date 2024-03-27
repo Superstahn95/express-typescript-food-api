@@ -86,3 +86,25 @@ export const deleteCategoryService = async (
     next(InternalServerError);
   }
 };
+
+export const getCategoriesService = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const categories = await Category.find().populate("meals");
+    res.status(200).json(
+      customResponse({
+        data: categories,
+        error: false,
+        message: "ok",
+        status: 200,
+        success: true,
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    next(InternalServerError);
+  }
+};

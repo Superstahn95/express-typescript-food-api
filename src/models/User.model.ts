@@ -45,6 +45,11 @@ const userSchema: Schema<IUserDocument> = new Schema(
       trim: true,
       required: [true, "Phone number is required"],
     },
+    password: {
+      type: String,
+      trim: true,
+      required: [true, "Password is required"],
+    },
   },
   { timestamps: true }
 );
@@ -76,7 +81,9 @@ userSchema.methods.sayHI = function () {
 userSchema.methods.comparePassword = async function (
   password: string
 ): Promise<boolean> {
+  console.log(`comparing ${password} with ${this.password}`);
   const isMatch = await bcrypt.compare(password, this.password);
+  console.log(isMatch);
   return isMatch;
 };
 

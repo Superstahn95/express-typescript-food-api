@@ -11,6 +11,7 @@ export const errorHandlerMiddleware: ErrorRequestHandler = async (
   next
 ) => {
   const statusCode: number = err.statusCode || 500;
+  console.log("we just hit the error handler");
 
   res.status(statusCode).json({
     data: null,

@@ -1,5 +1,9 @@
 import { Request, Response, NextFunction } from "express";
-import { createCategoryService, deleteCategoryService } from "../services";
+import {
+  createCategoryService,
+  deleteCategoryService,
+  getCategoriesService,
+} from "../services";
 
 export const createCategoryController = (
   req: Request,
@@ -15,6 +19,14 @@ export const deleteCategoryController = (
   next: NextFunction
 ) => {
   deleteCategoryService(req, res, next);
+};
+
+export const getCategoriesController = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  getCategoriesService(req, res, next);
 };
 
 //other functionalities to be written when admin client side has been built

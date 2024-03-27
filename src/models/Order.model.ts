@@ -1,6 +1,5 @@
 import { model, Schema } from "mongoose";
 import { IOrder } from "../interfaces";
-import { string } from "joi";
 
 const orderSchema = new Schema<IOrder>({
   deliveryInfo: {
