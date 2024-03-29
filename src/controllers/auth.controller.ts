@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction, RequestHandler } from "express";
-import { loginService, signUpService } from "../services";
+import { loginService, signUpService, refreshTokenService } from "../services";
+import { IUser, AuthenticatedRequestBody } from "../interfaces";
 
 export const signUpController = (
   req: Request,
@@ -12,3 +13,11 @@ export const loginController = (
   res: Response,
   next: NextFunction
 ) => loginService(req, res, next);
+
+export const refeshTokenController = (
+  req: AuthenticatedRequestBody<IUser>,
+  res: Response,
+  next: NextFunction
+) => {
+  refreshTokenService(req, res, next);
+};

@@ -3,6 +3,8 @@ import createHttpError, { InternalServerError } from "http-errors";
 import { User } from "../models";
 import { environmentConfig } from "../configs";
 import { customResponse } from "../utils";
+import { sign, verify } from "jsonwebtoken";
+import { IUser, AuthenticatedRequestBody } from "../interfaces";
 
 export const signUpService = async (
   req: Request,
@@ -29,11 +31,31 @@ export const signUpService = async (
       password,
     });
     const user = await newUser.save();
-    console.log("user saved");
+    // const {password, ...otherUserInfo} = user
     //create token and send out token along with the user
+    const accessToken = sign(
+      { id: user._id },
+      environmentConfig.ACCESS_TOKEN_SECRET_KEY as string,
+      { expiresIn: environmentConfig.ACCESS_TOKEN_EXPIRY_TIME as string }
+    );
+    const refreshToken = sign(
+      { id: user._id },
+      environmentConfig.REFRESH_TOKEN_SECRET_KEY as string,
+      { expiresIn: environmentConfig.REFRESH_TOKEN_EXPIRY_TIME as string }
+    );
+    const responseData = {
+      token: accessToken,
+      user,
+    };
+    //set refresh token as as a cookie
+    res.cookie("refresh_token", refreshToken, {
+      httpOnly: true,
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      secure: process.env.NODE_ENVIRONMENT === "production",
+    });
     res.status(201).json(
       customResponse({
-        data: user,
+        data: responseData,
         error: false,
         message: "ok",
         status: 201,
@@ -67,23 +89,66 @@ export const loginService = async (
       //send back an error here
       return next(createHttpError(400, "Invalid credentials"));
     }
-    //create a jsonwebtoken
+    const accessToken = sign(
+      { id: user._id },
+      environmentConfig.ACCESS_TOKEN_SECRET_KEY as string,
+      { expiresIn: environmentConfig.ACCESS_TOKEN_EXPIRY_TIME as string }
+    );
+    const refreshToken = sign(
+      { id: user._id },
+      environmentConfig.REFRESH_TOKEN_SECRET_KEY as string,
+      { expiresIn: environmentConfig.REFRESH_TOKEN_EXPIRY_TIME as string }
+    );
 
-    //send back user
-    res
-      .status(200)
-      .json(
-        customResponse({
-          data: user,
-          error: false,
-          message: "ok",
-          status: 200,
-          success: true,
-        })
-      );
+    const responseData = {
+      token: accessToken,
+      user,
+    };
+    res.cookie("refresh_token", refreshToken, {
+      httpOnly: true,
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      secure: process.env.NODE_ENVIRONMENT === "production",
+      sameSite: "none",
+    });
+
+    res.status(200).json(
+      customResponse({
+        data: responseData,
+        error: false,
+        message: "ok",
+        status: 200,
+        success: true,
+      })
+    );
   } catch (error) {
-    console.log("error in our catch block.....");
     console.log(error);
+    next(InternalServerError);
+  }
+};
+
+export const refreshTokenService = async (
+  req: AuthenticatedRequestBody<IUser>,
+  res: Response,
+  next: NextFunction
+) => {
+  //our request is going to have a user property
+  try {
+    const accessToken = sign(
+      { id: req.user?._id },
+      environmentConfig.ACCESS_TOKEN_SECRET_KEY as string,
+      { expiresIn: environmentConfig.ACCESS_TOKEN_EXPIRY_TIME as string }
+    );
+    const responseData = { token: accessToken };
+    res.status(200).json(
+      customResponse({
+        data: responseData,
+        error: false,
+        success: true,
+        message: "ok",
+        status: 200,
+      })
+    );
+  } catch (error) {
     next(InternalServerError);
   }
 };
