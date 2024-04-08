@@ -10,7 +10,7 @@ export const corsMiddleware = cors({
       callback(null, true);
     } else {
       console.log("This should throw a cors error");
-      throw new Error("Origin is not allowed");
+      //   throw new Error("Origin is not allowed");
     }
   },
   optionsSuccessStatus: 200,

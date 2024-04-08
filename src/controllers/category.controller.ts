@@ -3,6 +3,7 @@ import {
   createCategoryService,
   deleteCategoryService,
   getCategoriesService,
+  getCategoryService,
 } from "../services";
 
 export const createCategoryController = (
@@ -27,6 +28,14 @@ export const getCategoriesController = (
   next: NextFunction
 ) => {
   getCategoriesService(req, res, next);
+};
+
+export const getCategoryController = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  getCategoryService(req, res, next);
 };
 
 //other functionalities to be written when admin client side has been built

@@ -104,22 +104,28 @@ export const loginService = async (
       token: accessToken,
       user,
     };
-    res.cookie("refresh_token", refreshToken, {
-      httpOnly: true,
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-      secure: process.env.NODE_ENVIRONMENT === "production",
-      sameSite: "none",
-    });
-
-    res.status(200).json(
-      customResponse({
-        data: responseData,
-        error: false,
-        message: "ok",
-        status: 200,
-        success: true,
+    // res.cookie("refresh_token", refreshToken, {
+    //   httpOnly: true,
+    //   maxAge: 7 * 24 * 60 * 60 * 1000,
+    //   secure: process.env.NODE_ENVIRONMENT === "production",
+    //   secure: false,
+    // });
+    res
+      .cookie("refresh_token", refreshToken, {
+        httpOnly: true,
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+        secure: process.env.NODE_ENVIRONMENT === "production",
       })
-    );
+      .status(200)
+      .json(
+        customResponse({
+          data: responseData,
+          error: false,
+          message: "ok",
+          status: 200,
+          success: true,
+        })
+      );
   } catch (error) {
     console.log(error);
     next(InternalServerError);

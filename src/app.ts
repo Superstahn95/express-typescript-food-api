@@ -24,6 +24,11 @@ app.use(corsMiddleware);
 app.use(express.json());
 app.use(cookieParser());
 
+app.get("/set-cookie", (req, res) => {
+  res.cookie("myCookie", "cookieValue", { maxAge: 900000, httpOnly: true });
+  res.send("Cookie has been set");
+});
+
 //serve static files
 app.use("/static", express.static("public"));
 

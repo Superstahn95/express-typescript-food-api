@@ -51,6 +51,7 @@ export const refreshTokenCheck = async (
 ) => {
   const refreshToken = req.cookies["refresh_token"];
   if (!refreshToken) {
+    console.log("There is an absence of refresh token");
     return next(createHttpError(401, "unauthenticated"));
   }
   try {

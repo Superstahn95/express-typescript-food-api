@@ -12,3 +12,6 @@ export const deleteCategoryValidation: RequestHandler = (req, res, next) => {
     next
   );
 };
+export const getCategoryValidation: RequestHandler = (req, res, next) => {
+  validator(categorySchema.getCategory, { ...req.params }, next);
+};

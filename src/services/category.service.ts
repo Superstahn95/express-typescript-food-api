@@ -108,3 +108,33 @@ export const getCategoriesService = async (
     next(InternalServerError);
   }
 };
+
+export const getCategoryService = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { categoryId } = req.params;
+  const ObjectId = mongoose.Types.ObjectId;
+  if (!ObjectId.isValid(categoryId)) {
+    return next(createHttpError(404, "Category not found"));
+  }
+  try {
+    const category = await Category.findById(categoryId).populate("meals");
+    if (!category) {
+      return next(createHttpError(404, "Category not found"));
+    }
+    res.status(200).json(
+      customResponse({
+        data: category,
+        error: false,
+        message: "category fetched",
+        status: 200,
+        success: true,
+      })
+    );
+  } catch (error) {
+    console.log(error);
+    next(InternalServerError);
+  }
+};

@@ -8,4 +8,7 @@ export const categorySchema = {
   deleteCategory: Joi.object({
     categoryId: Joi.string().required(),
   }),
+  getCategory: Joi.object({
+    categoryId: Joi.string().required(),
+  }),
 };
