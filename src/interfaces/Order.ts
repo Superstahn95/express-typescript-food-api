@@ -17,6 +17,9 @@ export interface IDeliveryInfo {
 export interface IOrder extends Document {
   orderedMeals: { quantity: number; meal: mongoose.Schema.Types.ObjectId }[];
   deliveryInfo: IDeliveryInfo;
-  orderOwner: OrderUserDetails;
+  // orderOwner: OrderUserDetails;
+  userId: mongoose.Schema.Types.ObjectId;
   totalAmount: number;
+  paymentReference: string;
+  isDelivered: boolean;
 }
