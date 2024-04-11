@@ -14,6 +14,7 @@ export const environmentConfig = {
   REFRESH_TOKEN_SECRET_KEY: process.env.REFRESH_TOKEN_SECRET_KEY,
   ACCESS_TOKEN_EXPIRY_TIME: process.env.ACCESS_TOKEN_EXPIRY_TIME,
   REFRESH_TOKEN_EXPIRY_TIME: process.env.REFRESH_TOKEN_EXPIRY_TIME,
+  PAYSTACK_SECRET_KEY: process.env.PAYSTACK_SECRET_KEY,
 };
 
 export default environmentConfig;
