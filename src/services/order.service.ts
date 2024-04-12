@@ -9,7 +9,9 @@ export const createOrderService = async (
   res: Response,
   next: NextFunction
 ) => {
-  const { deliveryInfo, totalAmount, orderedMeals } = req.body;
+  //figure out a way to get payment details attached to an order
+  const { deliveryInfo, totalAmount, orderedMeals, paymentReference } =
+    req.body;
   try {
     const authenticatedUser = await User.findById(req.user?._id);
     if (!authenticatedUser)
@@ -30,17 +32,20 @@ export const createOrderService = async (
           );
       });
     }
-    const orderOwner = {
-      firstName: authenticatedUser.firstName,
-      lastName: authenticatedUser.lastName,
-      number: authenticatedUser.number,
-      email: authenticatedUser.email,
-    };
+    // replacing the below with the userID => the field can be populated if we  wish to make use of this
+    // const orderOwner = {
+    //   firstName: authenticatedUser.firstName,
+    //   lastName: authenticatedUser.lastName,
+    //   number: authenticatedUser.number,
+    //   email: authenticatedUser.email,
+    // };
     const order = new Order({
       totalAmount,
       orderedMeals,
       deliveryInfo,
-      orderOwner,
+      // orderOwner,
+      userId: req.user?.id,
+      paymentReference,
     });
     await order.save();
   } catch (error) {
