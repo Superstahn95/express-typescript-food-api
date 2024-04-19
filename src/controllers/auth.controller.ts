@@ -1,5 +1,10 @@
 import { Request, Response, NextFunction, RequestHandler } from "express";
-import { loginService, signUpService, refreshTokenService } from "../services";
+import {
+  loginService,
+  signUpService,
+  refreshTokenService,
+  refetchUserService,
+} from "../services";
 import { IUser, AuthenticatedRequestBody } from "../interfaces";
 
 export const signUpController = (
@@ -20,4 +25,12 @@ export const refeshTokenController = (
   next: NextFunction
 ) => {
   refreshTokenService(req, res, next);
+};
+
+export const refetchUserController = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  refetchUserService(req, res, next);
 };

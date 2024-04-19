@@ -3,7 +3,7 @@ import createHttpError, { InternalServerError } from "http-errors";
 import { User } from "../models";
 import { environmentConfig } from "../configs";
 import { customResponse } from "../utils";
-import { sign, verify } from "jsonwebtoken";
+import { sign, verify, JwtPayload } from "jsonwebtoken";
 import { IUser, AuthenticatedRequestBody } from "../interfaces";
 
 export const signUpService = async (
@@ -104,17 +104,12 @@ export const loginService = async (
       token: accessToken,
       user,
     };
-    // res.cookie("refresh_token", refreshToken, {
-    //   httpOnly: true,
-    //   maxAge: 7 * 24 * 60 * 60 * 1000,
-    //   secure: process.env.NODE_ENVIRONMENT === "production",
-    //   secure: false,
-    // });
     res
       .cookie("refresh_token", refreshToken, {
         httpOnly: true,
         maxAge: 7 * 24 * 60 * 60 * 1000,
         secure: process.env.NODE_ENVIRONMENT === "production",
+        sameSite: "none",
       })
       .status(200)
       .json(
@@ -152,6 +147,49 @@ export const refreshTokenService = async (
         success: true,
         message: "ok",
         status: 200,
+      })
+    );
+  } catch (error) {
+    next(InternalServerError);
+  }
+};
+
+export const refetchUserService = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const refreshToken = req.cookies["refresh_token"];
+  if (!refreshToken) {
+    console.log("There is an absence of refresh token");
+    return next(createHttpError(400, "no auth token sent"));
+  }
+  try {
+    const decodedToken = verify(
+      refreshToken,
+      environmentConfig.REFRESH_TOKEN_SECRET_KEY as string
+    ) as JwtPayload;
+    if (!decodedToken) {
+      return next(createHttpError(401, "unauthorized"));
+    }
+    const user = await User.findOne({ _id: decodedToken.id });
+    if (!user) {
+      return next(createHttpError(401, "Unauthorized"));
+    }
+    //create an access token
+    const accessToken = sign(
+      { id: user._id },
+      environmentConfig.ACCESS_TOKEN_SECRET_KEY as string,
+      { expiresIn: environmentConfig.ACCESS_TOKEN_EXPIRY_TIME as string }
+    );
+    const responseData = { user, token: accessToken };
+    res.status(200).json(
+      customResponse({
+        data: responseData,
+        error: false,
+        message: "user fetched",
+        status: 200,
+        success: true,
       })
     );
   } catch (error) {

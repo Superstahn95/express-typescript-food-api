@@ -7,6 +7,7 @@ import {
   loginController,
   refeshTokenController,
   signUpController,
+  refetchUserController,
 } from "../controllers";
 import { isAuth, refreshTokenCheck } from "../middlewares/auth";
 
@@ -29,5 +30,7 @@ router.get("/protected", isAuth, (req, res, next) => {
     message: "Hey!!! authenticated user, You can access this route now!!",
   });
 });
+
+router.get("/refetch", refetchUserController);
 
 export default router;
