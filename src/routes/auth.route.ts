@@ -8,6 +8,8 @@ import {
   refeshTokenController,
   signUpController,
   refetchUserController,
+  mobileLoginController,
+  mobileSignUpController,
 } from "../controllers";
 import { isAuth, refreshTokenCheck } from "../middlewares/auth";
 
@@ -18,8 +20,9 @@ const router = express.Router();
 // });
 
 router.post("/register", signUpValidation, signUpController);
-
+router.post("/mobile/register", signUpValidation, mobileSignUpController);
 router.post("/login", loginValidation, loginController);
+router.post("/mobile/login", loginValidation, mobileLoginController);
 
 //should have an auth middleware
 router.post("/refresh-token", refreshTokenCheck, refeshTokenController);

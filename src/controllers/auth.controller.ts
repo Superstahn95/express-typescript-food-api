@@ -4,6 +4,8 @@ import {
   signUpService,
   refreshTokenService,
   refetchUserService,
+  mobileLoginService,
+  mobileRegisterService,
 } from "../services";
 import { IUser, AuthenticatedRequestBody } from "../interfaces";
 
@@ -33,4 +35,20 @@ export const refetchUserController = (
   next: NextFunction
 ) => {
   refetchUserService(req, res, next);
+};
+
+export const mobileLoginController = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  mobileLoginService(req, res, next);
+};
+
+export const mobileSignUpController = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  mobileRegisterService(req, res, next);
 };

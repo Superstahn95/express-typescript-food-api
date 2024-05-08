@@ -5,7 +5,7 @@ import path from "path";
 
 const port = process.env.PORT || 4000;
 const environment = process.env.NODE_ENVIRONMENT;
-console.log(path.join(__dirname, "public"));
+
 export const startServer = async () => {
   const testConnectionString: string | undefined =
     environmentConfig.MONGO_DB_TEST_CONNECTION_STRING;
@@ -45,3 +45,5 @@ export const startServer = async () => {
 startServer();
 
 // export default server;
+
+// http:://localhost:4000/public/upload/meal/mealImage-44870c09-3383-4f68-aa25-9ff9c710140d.jpeg

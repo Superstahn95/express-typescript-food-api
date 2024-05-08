@@ -32,7 +32,6 @@ const mealSchema = new Schema<IMeal>(
       type: Schema.Types.ObjectId,
       required: true,
       ref: "Category",
-      default: null,
     },
   },
   { timestamps: true }
