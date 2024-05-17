@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import createHttpError, { InternalServerError } from "http-errors";
 import { Order, User, Meal } from "../models";
 import { AuthenticatedRequestBody, IOrder } from "../interfaces";
+import { customResponse } from "../utils";
 
 export const createOrderService = async (
   req: AuthenticatedRequestBody<IOrder>,
@@ -10,6 +11,7 @@ export const createOrderService = async (
   next: NextFunction
 ) => {
   //figure out a way to get payment details attached to an order
+  console.log("we just hit the order service");
   const { deliveryInfo, totalAmount, orderedMeals, paymentReference } =
     req.body;
   try {
@@ -48,12 +50,63 @@ export const createOrderService = async (
       paymentReference,
     });
     await order.save();
+
+    res.status(200).json(
+      customResponse({
+        data: "Order sent",
+        error: false,
+        message: "ok",
+        status: 201,
+        success: true,
+      })
+    );
   } catch (error) {
     console.log(error);
     next(InternalServerError);
   }
 };
 
+// export const mobileCreateOrderService = async (
+//   req: AuthenticatedRequestBody<IOrder>,
+//   res: Response,
+//   next: NextFunction
+// ) => {
+//   const { deliveryInfo, totalAmount, orderedMeals, paymentReference } =
+//     req.body;
+//   try {
+//     const authenticatedUser = await User.findById(req.user?._id);
+//     if (!authenticatedUser)
+//       return next(createHttpError(401, "failed authentication"));
+
+//     //check if there are products ordered
+//     if (!orderedMeals || orderedMeals.length < 1) {
+//       return next(createHttpError(400, "You cannot place an empty order"));
+//     }
+//     //check availwblility of ordered products.
+//     //if any product is not available, send an error to the client
+//     if (orderedMeals && orderedMeals.length > 0) {
+//       orderedMeals.forEach(async (meal) => {
+//         const isPrdouctExists = await Meal.findById(meal.meal);
+//         if (!isPrdouctExists)
+//           return next(
+//             createHttpError(400, "Some products in your cart no longer exists")
+//           );
+//       });
+//     }
+//     const order = new Order({
+//       totalAmount,
+//       orderedMeals,
+//       deliveryInfo,
+//       // orderOwner,
+//       userId: req.user?.id,
+//       paymentReference,
+//     });
+//     await order.save();
+//   } catch (error) {
+//     console.log(error);
+//     next(InternalServerError);
+//   }
+// };
 export const getOrderService = async (
   req: Request,
   res: Response,

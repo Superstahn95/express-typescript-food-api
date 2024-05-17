@@ -5,6 +5,6 @@ import { placeOrderValidation } from "../validation/orderValidation";
 
 const router = express.Router();
 
-router.post("/order", isAuth, placeOrderValidation, placeOrderController);
+router.post("/", isAuth, placeOrderController);
 
 export default router;

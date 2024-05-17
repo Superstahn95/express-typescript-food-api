@@ -7,6 +7,7 @@ import {
   loginController,
   refeshTokenController,
   signUpController,
+  logoutController,
   refetchUserController,
   mobileLoginController,
   mobileSignUpController,
@@ -23,6 +24,7 @@ router.post("/register", signUpValidation, signUpController);
 router.post("/mobile/register", signUpValidation, mobileSignUpController);
 router.post("/login", loginValidation, loginController);
 router.post("/mobile/login", loginValidation, mobileLoginController);
+router.post("/logout", isAuth, logoutController);
 
 //should have an auth middleware
 router.post("/refresh-token", refreshTokenCheck, refeshTokenController);

@@ -217,18 +217,11 @@ export const mobileLoginService = async (
     }
     const accessToken = sign(
       { id: user._id },
-      environmentConfig.ACCESS_TOKEN_SECRET_KEY as string,
-      { expiresIn: environmentConfig.ACCESS_TOKEN_EXPIRY_TIME as string }
-    );
-    const refreshToken = sign(
-      { id: user._id },
-      environmentConfig.REFRESH_TOKEN_SECRET_KEY as string,
-      { expiresIn: environmentConfig.REFRESH_TOKEN_EXPIRY_TIME as string }
+      environmentConfig.ACCESS_TOKEN_SECRET_KEY as string
     );
 
     const responseData = {
-      accessToken,
-      refreshToken,
+      token: accessToken,
       user,
     };
     res.status(200).json(
@@ -274,17 +267,11 @@ export const mobileRegisterService = async (
     //create token and send out token along with the user
     const accessToken = sign(
       { id: user._id },
-      environmentConfig.ACCESS_TOKEN_SECRET_KEY as string,
-      { expiresIn: environmentConfig.ACCESS_TOKEN_EXPIRY_TIME as string }
+      environmentConfig.ACCESS_TOKEN_SECRET_KEY as string
     );
-    const refreshToken = sign(
-      { id: user._id },
-      environmentConfig.REFRESH_TOKEN_SECRET_KEY as string,
-      { expiresIn: environmentConfig.REFRESH_TOKEN_EXPIRY_TIME as string }
-    );
+
     const responseData = {
-      accessToken,
-      refreshToken,
+      token: accessToken,
       user,
     };
     res.status(201).json(
@@ -299,6 +286,29 @@ export const mobileRegisterService = async (
   } catch (error) {
     console.log("This is my error in my catch block.....");
     console.log(error);
+    next(InternalServerError);
+  }
+};
+
+export const logoutService = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    res.clearCookie("refresh_token");
+    res
+      .status(200)
+      .json(
+        customResponse({
+          data: "log out successful",
+          error: false,
+          message: "ok",
+          status: 200,
+          success: true,
+        })
+      );
+  } catch (error) {
     next(InternalServerError);
   }
 };

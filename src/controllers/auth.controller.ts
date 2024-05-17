@@ -2,6 +2,7 @@ import { Request, Response, NextFunction, RequestHandler } from "express";
 import {
   loginService,
   signUpService,
+  logoutService,
   refreshTokenService,
   refetchUserService,
   mobileLoginService,
@@ -51,4 +52,12 @@ export const mobileSignUpController = (
   next: NextFunction
 ) => {
   mobileRegisterService(req, res, next);
+};
+
+export const logoutController = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  logoutService(req, res, next);
 };
