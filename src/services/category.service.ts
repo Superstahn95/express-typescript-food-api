@@ -104,7 +104,6 @@ export const getCategoriesService = async (
       })
     );
   } catch (error) {
-    console.log(error);
     next(InternalServerError);
   }
 };
@@ -134,7 +133,6 @@ export const getCategoryService = async (
       })
     );
   } catch (error) {
-    console.log(error);
     next(InternalServerError);
   }
 };

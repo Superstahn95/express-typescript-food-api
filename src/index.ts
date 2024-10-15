@@ -16,7 +16,6 @@ export const startServer = async () => {
   if (!testConnectionString || !productionConnectionString) {
     throw new Error("Add appropriate data connection strings");
   }
-  console.log(productionConnectionString);
   try {
     //connect to database
     const conn = await mongoose.connect(

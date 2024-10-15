@@ -118,7 +118,6 @@ export const getMealsService = async (
       })
     );
   } catch (error) {
-    console.log(error);
     next(InternalServerError);
   }
 };

@@ -36,6 +36,7 @@ router.get("/protected", isAuth, (req, res, next) => {
   });
 });
 
+//refetch user on refresh
 router.get("/refetch", refetchUserController);
 
 export default router;
