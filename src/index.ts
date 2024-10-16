@@ -3,7 +3,7 @@ import app from "./app";
 import { environmentConfig } from "./configs";
 import path from "path";
 
-const port = process.env.PORT || 4000;
+const PORT = process.env.PORT || 4000;
 const environment = process.env.NODE_ENVIRONMENT;
 
 export const startServer = async () => {
@@ -27,7 +27,7 @@ export const startServer = async () => {
       `MongoDb connection established to...${conn?.connection?.host}`
     );
     //connect to server
-    app.listen(environmentConfig.PORT, () => {
+    app.listen(PORT, () => {
       console.log(
         `Connected to server with port number ${environmentConfig.PORT}`
       );
