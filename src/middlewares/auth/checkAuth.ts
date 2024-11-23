@@ -52,7 +52,7 @@ export const refreshTokenCheck = async (
   const refreshToken = req.cookies["refresh_token"];
   if (!refreshToken) {
     console.log("There is an absence of refresh token");
-    return next(createHttpError(401, "unauthenticated"));
+    return next(createHttpError(400, "bad request"));
   }
   try {
     //verify refresh token
@@ -61,7 +61,7 @@ export const refreshTokenCheck = async (
       environmentConfig.REFRESH_TOKEN_SECRET_KEY as string
     ) as jwt.JwtPayload;
     if (!decodedToken) {
-      return next(createHttpError(401, "unauthorized"));
+      return next(createHttpError(400, "bad request"));
     }
     const user = await User.findOne({ _id: decodedToken.id });
     if (!user) {
